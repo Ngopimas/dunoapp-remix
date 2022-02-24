@@ -17,12 +17,12 @@ export default function Index() {
     <div className="container">
       <div className="content">
         <h1>
-          DUN🍽️ <span>where to eat?</span>
+          DUNO <span>where to eat?</span>
         </h1>
         <nav>
           <ul>
             <li>
-              <Link to="restaurants">Find your food</Link>
+              <Link to="places">Find your food</Link>
             </li>
           </ul>
         </nav>

@@ -1,4 +1,4 @@
-export default function NewRestaurantRoute() {
+export default function NewPlaceRoute() {
   return (
     <div>
       <p>Add your own Restaurant</p>

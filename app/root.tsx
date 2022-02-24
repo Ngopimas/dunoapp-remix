@@ -29,7 +29,7 @@ export default function App() {
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
-        <title>DUN🍽️app</title>
+        <title>DUNOapp</title>
         <Links />
       </head>
       <body>

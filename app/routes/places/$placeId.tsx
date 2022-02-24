@@ -1,4 +1,4 @@
-export default function RestaurantRoute() {
+export default function PlaceRoute() {
   return (
     <div>
       <p>Here's your Restaurant:</p>
