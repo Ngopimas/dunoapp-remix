@@ -1,5 +1,5 @@
-import type { ActionFunction, LinksFunction } from "remix";
-import { useActionData, json, Link, useSearchParams } from "remix";
+import type { ActionFunction, LinksFunction, MetaFunction } from "remix";
+import { useActionData, json, Link, useSearchParams, Form } from "remix";
 
 import { db } from "~/utils/db.server";
 import { createUserSession, login, register } from "~/utils/session.server";
@@ -7,6 +7,13 @@ import stylesUrl from "~/styles/login.css";
 
 export const links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: stylesUrl }];
+};
+
+export const meta: MetaFunction = () => {
+  return {
+    title: "DUNOapp | Login",
+    description: "Login to add your places to DUNOapp!",
+  };
 };
 
 function validateUsername(username: unknown) {
@@ -113,7 +120,7 @@ export default function Login() {
     <div className="container">
       <div className="content" data-light="">
         <h1>DUN🍔app</h1>
-        <form method="post">
+        <Form method="post">
           <input
             type="hidden"
             name="redirectTo"
@@ -199,7 +206,7 @@ export default function Login() {
           <button type="submit" className="button">
             Submit
           </button>
-        </form>
+        </Form>
       </div>
       <div className="links">
         <ul>

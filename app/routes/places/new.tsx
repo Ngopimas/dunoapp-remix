@@ -1,8 +1,16 @@
-import type { ActionFunction } from "remix";
-import { useActionData, redirect, json } from "remix";
+import type { ActionFunction, LoaderFunction } from "remix";
+import { useActionData, redirect, json, useCatch, Link, Form } from "remix";
 
 import { db } from "~/utils/db.server";
-import { requireUserId } from "~/utils/session.server";
+import { requireUserId, getUserId } from "~/utils/session.server";
+
+export const loader: LoaderFunction = async ({ request }) => {
+  const userId = await getUserId(request);
+  if (!userId) {
+    throw new Response("Unauthorized", { status: 401 });
+  }
+  return {};
+};
 
 function validatePlaceContent(content: string) {
   if (content.length < 3) {
@@ -64,7 +72,7 @@ export default function NewPlaceRoute() {
   return (
     <div>
       <p>Which new gem would you like to share?</p>
-      <form method="post">
+      <Form method="post">
         <div>
           <label>
             Name:{" "}
@@ -113,9 +121,22 @@ export default function NewPlaceRoute() {
             Add this place
           </button>
         </div>
-      </form>
+      </Form>
     </div>
   );
+}
+
+export function CatchBoundary() {
+  const caught = useCatch();
+
+  if (caught.status === 401) {
+    return (
+      <div className="error-container">
+        <p>You must be logged in to add a place.</p>
+        <Link to="/login">Login</Link>
+      </div>
+    );
+  }
 }
 
 export function ErrorBoundary() {

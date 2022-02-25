@@ -1,4 +1,4 @@
-import type { LinksFunction } from "remix";
+import type { LinksFunction, MetaFunction } from "remix";
 import { Link } from "remix";
 
 import stylesUrl from "~/styles/index.css";
@@ -12,6 +12,11 @@ export const links: LinksFunction = () => {
   ];
 };
 
+export const meta: MetaFunction = () => ({
+  title: "DUNOapp",
+  description: "Let's find where to eat.",
+});
+
 export default function Index() {
   return (
     <div className="container">
@@ -22,7 +27,9 @@ export default function Index() {
         <nav>
           <ul>
             <li>
-              <Link to="places">Find your food</Link>
+              <Link prefetch="intent" to="places">
+                Find your food
+              </Link>
             </li>
           </ul>
         </nav>

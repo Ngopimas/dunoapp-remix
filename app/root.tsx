@@ -1,5 +1,5 @@
-import type { LinksFunction } from "remix";
-import { Links, LiveReload, Outlet } from "remix";
+import { Links, LiveReload, Outlet, useCatch, Meta, Scripts } from "remix";
+import type { LinksFunction, MetaFunction } from "remix";
 
 import globalStylesUrl from "./styles/global.css";
 import globalMediumStylesUrl from "./styles/global-medium.css";
@@ -24,6 +24,20 @@ export const links: LinksFunction = () => {
   ];
 };
 
+export const meta: MetaFunction = () => {
+  const description = `You don't know where to eat? Let's find out.`;
+  return {
+    description,
+    keywords: "Remix,jokes",
+    "twitter:image": "https://dunoapp.com/social.png",
+    "twitter:card": "summary_large_image",
+    "twitter:creator": "@ngopimas",
+    "twitter:site": "@ngopimas",
+    "twitter:title": "DUNOapp",
+    "twitter:description": description,
+  };
+};
+
 function Document({
   children,
   title = `DUNOapp`,
@@ -35,11 +49,13 @@ function Document({
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
+        <Meta />
         <title>{title}</title>
         <Links />
       </head>
       <body>
         {children}
+        <Scripts />
         <LiveReload />
       </body>
     </html>
@@ -54,7 +70,22 @@ export default function App() {
   );
 }
 
+export function CatchBoundary() {
+  const caught = useCatch();
+
+  return (
+    <Document title={`${caught.status} ${caught.statusText}`}>
+      <div className="error-container">
+        <h1>
+          {caught.status} {caught.statusText}
+        </h1>
+      </div>
+    </Document>
+  );
+}
+
 export function ErrorBoundary({ error }: { error: Error }) {
+  console.error(error);
   return (
     <Document title="Uh-oh!">
       <div className="error-container">

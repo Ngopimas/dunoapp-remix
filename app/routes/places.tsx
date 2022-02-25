@@ -1,5 +1,5 @@
 import type { LinksFunction, LoaderFunction } from "remix";
-import { Link, Outlet, useLoaderData } from "remix";
+import { Link, Outlet, useLoaderData, Form } from "remix";
 
 import { db } from "~/utils/db.server";
 import { getUser } from "~/utils/session.server";
@@ -63,11 +63,11 @@ export default function placesRoute() {
           {data.user ? (
             <div className="user-info">
               <span>{`Hi ${data.user.username}`}</span>
-              <form action="/logout" method="post">
+              <Form action="/logout" method="post">
                 <button type="submit" className="button">
                   Logout
                 </button>
-              </form>
+              </Form>
             </div>
           ) : (
             <Link to="/login">Login</Link>
@@ -84,7 +84,9 @@ export default function placesRoute() {
             <ul>
               {data.placeListItems.map((place) => (
                 <li key={place.id}>
-                  <Link to={place.id}>{place.name}</Link>
+                  <Link prefetch="intent" to={place.id}>
+                    {place.name}
+                  </Link>
                 </li>
               ))}
             </ul>
