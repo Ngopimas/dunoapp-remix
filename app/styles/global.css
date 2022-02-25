@@ -12,7 +12,7 @@
   --color-links: hsl(var(--hs-links) 50%);
   --color-links-hover: hsl(var(--hs-links) 45%);
   --color-border: #f9cb11;
-  --color-invalid: hsl(356, 100%, 71%);
+  --color-invalid: #f50057;
   --gradient-background: radial-gradient(
     circle,
     #757ce8 0%,

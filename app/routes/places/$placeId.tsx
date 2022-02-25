@@ -24,3 +24,9 @@ export default function PlaceRoute() {
     </div>
   );
 }
+
+export function ErrorBoundary() {
+  return (
+    <div className="error-container">{`There was an error loading this place. Sorry.`}</div>
+  );
+}

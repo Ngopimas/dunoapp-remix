@@ -1,5 +1,5 @@
-import type { LoaderFunction } from "remix";
 import { useLoaderData, Link } from "remix";
+import type { LoaderFunction } from "remix";
 import type { Place } from "@prisma/client";
 
 import { db } from "~/utils/db.server";
@@ -27,4 +27,8 @@ export default function PlacesIndexRoute() {
       <p>{data.randomPlace.content}</p>
     </div>
   );
+}
+
+export function ErrorBoundary() {
+  return <div className="error-container">Oopsy...</div>;
 }

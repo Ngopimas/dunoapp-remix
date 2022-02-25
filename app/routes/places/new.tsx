@@ -2,6 +2,7 @@ import type { ActionFunction } from "remix";
 import { useActionData, redirect, json } from "remix";
 
 import { db } from "~/utils/db.server";
+import { requireUserId } from "~/utils/session.server";
 
 function validatePlaceContent(content: string) {
   if (content.length < 3) {
@@ -30,6 +31,7 @@ type ActionData = {
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 
 export const action: ActionFunction = async ({ request }) => {
+  const userId = await requireUserId(request);
   const form = await request.formData();
   const name = form.get("name");
   const content = form.get("content");
@@ -50,12 +52,15 @@ export const action: ActionFunction = async ({ request }) => {
     return badRequest({ fieldErrors, fields });
   }
 
-  const place = await db.place.create({ data: fields });
+  const place = await db.place.create({ data: { ...fields, userId } });
   return redirect(`/places/${place.id}`);
 };
 
 export default function NewPlaceRoute() {
   const actionData = useActionData<ActionData>();
+
+  // const contentError = validatePlaceContent(state.content);
+
   return (
     <div>
       <p>Which new gem would you like to share?</p>
@@ -109,6 +114,14 @@ export default function NewPlaceRoute() {
           </button>
         </div>
       </form>
+    </div>
+  );
+}
+
+export function ErrorBoundary() {
+  return (
+    <div className="error-container">
+      Something unexpected went wrong. Sorry about that.
     </div>
   );
 }

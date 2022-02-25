@@ -2,6 +2,7 @@ import type { LinksFunction, LoaderFunction } from "remix";
 import { Link, Outlet, useLoaderData } from "remix";
 
 import { db } from "~/utils/db.server";
+import { getUser } from "~/utils/session.server";
 
 import stylesUrl from "~/styles/restaurants.css";
 import { Place } from "@prisma/client";
@@ -13,9 +14,10 @@ export const links: LinksFunction = () => {
 type LoaderData = {
   // placeListItems: Array<{ id: string; name: string }>;
   placeListItems: Array<Pick<Place, "id" | "name">>;
+  user: Awaited<ReturnType<typeof getUser>>;
 };
 
-export const loader: LoaderFunction = async () => {
+export const loader: LoaderFunction = async ({ request }) => {
   const randomPick = (values: string[]) => {
     const index = Math.floor(Math.random() * values.length);
     return values[index];
@@ -32,15 +34,18 @@ export const loader: LoaderFunction = async () => {
     `content`,
     `id`,
   ]);
-  const data: LoaderData = {
-    placeListItems: await db.place.findMany({
-      take: 3,
-      select: { id: true, name: true },
-      orderBy: { [orderBy]: orderDir },
-      skip: randomNumber(0, itemCount - 1),
-    }),
-  };
-  return data;
+  const placeListItems = await db.place.findMany({
+    take: 3,
+    select: { id: true, name: true },
+    orderBy: { [orderBy]: orderDir },
+    skip: randomNumber(0, itemCount - 1),
+  });
+  const user = await getUser(request);
+
+  return {
+    placeListItems,
+    user,
+  } as LoaderData;
 };
 
 export default function placesRoute() {
@@ -55,6 +60,18 @@ export default function placesRoute() {
               <span className="logo-medium">DUN🍔app</span>
             </Link>
           </h1>
+          {data.user ? (
+            <div className="user-info">
+              <span>{`Hi ${data.user.username}`}</span>
+              <form action="/logout" method="post">
+                <button type="submit" className="button">
+                  Logout
+                </button>
+              </form>
+            </div>
+          ) : (
+            <Link to="/login">Login</Link>
+          )}
         </div>
       </header>
       <main className="restaurants-main">
