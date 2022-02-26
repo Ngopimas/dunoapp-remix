@@ -12,7 +12,10 @@
     "dev": "cross-env NODE_ENV=development remix dev",
     "postinstall": "remix setup node",
     "start": "cross-env NODE_ENV=production remix-serve build",
-    "studio": "npx prisma studio"
+    "studio": "npx prisma studio",
+    "db:studio": "npx prisma studio",
+    "db:push": "npx prisma db push",
+    "db:seed": "npx prisma db seed"
   },
   "dependencies": {
     "@prisma/client": "^3.10.0",

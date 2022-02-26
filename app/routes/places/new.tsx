@@ -94,7 +94,7 @@ export default function NewPlaceRoute() {
         </div>
         <div>
           <label>
-            Content:{" "}
+            Description:{" "}
             <textarea
               defaultValue={actionData?.fields?.content}
               name="content"
