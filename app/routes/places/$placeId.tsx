@@ -88,14 +88,15 @@ export default function PlaceRoute() {
             <input type="hidden" name="_method" value="delete" />
             <button
               type="submit"
-              className="button"
+              className="button logout"
               title="Are you sure to delete this place?"
             >
-              X
+              🗑️
             </button>
           </Form>
         )}
       </span>
+      <p>{data.place.address}</p>
       <p>{data.place.content}</p>
     </div>
   );

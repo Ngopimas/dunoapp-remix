@@ -12,7 +12,7 @@ import {
 } from "react-leaflet";
 import { getUserId } from "~/utils/session.server";
 // @ts-expect-error: import js file : () => null
-import LeafletControlGeocoder from "./LeafletControlGeocoder";
+import LeafletControlGeocoder from "~/components/LeafletControlGeocoder";
 
 interface NominatimRes {
   center?: LatLng;
@@ -62,6 +62,9 @@ function MarkerItem({ item }: { item: NominatimRes }) {
         <Popup position={[item.center.lat + 0.0002, item.center.lng]}>
           <p>{item.name}</p>
           <Form method="post" className="new-restaurant">
+            <input type="hidden" name="_lat" value={item.center.lat} />
+            <input type="hidden" name="_lng" value={item.center.lng} />
+            <input type="hidden" name="_address" value={item.name} />
             <div>
               <label>
                 Place name:{" "}
@@ -91,25 +94,25 @@ function MarkerItem({ item }: { item: NominatimRes }) {
               <label>
                 Description:{" "}
                 <textarea
-                  defaultValue={actionData?.fields?.description}
-                  name="description"
+                  defaultValue={actionData?.fields?.content}
+                  name="content"
                   aria-invalid={
-                    Boolean(actionData?.fieldErrors?.description) || undefined
+                    Boolean(actionData?.fieldErrors?.content) || undefined
                   }
                   aria-errormessage={
-                    actionData?.fieldErrors?.description
-                      ? "description-error"
+                    actionData?.fieldErrors?.content
+                      ? "content-error"
                       : undefined
                   }
                 />
               </label>
-              {actionData?.fieldErrors?.description ? (
+              {actionData?.fieldErrors?.content ? (
                 <p
                   className="form-validation-error"
                   role="alert"
-                  id="description-error"
+                  id="content-error"
                 >
-                  {actionData.fieldErrors.description}
+                  {actionData.fieldErrors.content}
                 </p>
               ) : null}
             </div>
@@ -124,18 +127,66 @@ function MarkerItem({ item }: { item: NominatimRes }) {
         <Marker position={[item.center.lat, item.center.lng]}>
           <Popup>
             <p>{item.name}</p>
-            <Form
-              action={`/places/new?lat=${item.center.lat}&lng=${item.center.lat}&name=${item.name}`}
-              method="post"
-            >
-              <input
-                type="hidden"
-                name="placeInfo"
-                value={JSON.stringify(item)}
-              />
-              <button type="submit" className="button" title="Let's add it">
-                Add this place
-              </button>
+            <Form method="post" className="new-restaurant">
+              <input type="hidden" name="_lat" value={item.center.lat} />
+              <input type="hidden" name="_lng" value={item.center.lng} />
+              <input type="hidden" name="_address" value={item.name} />
+              <div>
+                <label>
+                  Place name:{" "}
+                  <input
+                    type="text"
+                    defaultValue={actionData?.fields?.name}
+                    name="name"
+                    aria-invalid={
+                      Boolean(actionData?.fieldErrors?.name) || undefined
+                    }
+                    aria-errormessage={
+                      actionData?.fieldErrors?.name ? "name-error" : undefined
+                    }
+                  />
+                  {actionData?.fieldErrors?.name ? (
+                    <p
+                      className="form-validation-error"
+                      role="alert"
+                      id="name-error"
+                    >
+                      {actionData.fieldErrors.name}
+                    </p>
+                  ) : null}
+                </label>
+              </div>
+              <div>
+                <label>
+                  Description:{" "}
+                  <textarea
+                    defaultValue={actionData?.fields?.content}
+                    name="content"
+                    aria-invalid={
+                      Boolean(actionData?.fieldErrors?.content) || undefined
+                    }
+                    aria-errormessage={
+                      actionData?.fieldErrors?.content
+                        ? "content-error"
+                        : undefined
+                    }
+                  />
+                </label>
+                {actionData?.fieldErrors?.content ? (
+                  <p
+                    className="form-validation-error"
+                    role="alert"
+                    id="content-error"
+                  >
+                    {actionData.fieldErrors.content}
+                  </p>
+                ) : null}
+              </div>
+              <div>
+                <button type="submit" className="button large">
+                  Add this place
+                </button>
+              </div>
             </Form>
           </Popup>
         </Marker>

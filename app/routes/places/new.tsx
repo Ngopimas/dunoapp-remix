@@ -73,10 +73,16 @@ export const action: ActionFunction = async ({ request }) => {
   const form = await request.formData();
   const name = form.get("name");
   const content = form.get("content");
-  const lat = "";
-  const lng = "";
-  const address = "";
-  if (typeof name !== "string" || typeof content !== "string") {
+  const lat = form.get("_lat");
+  const lng = form.get("_lng");
+  const address = form.get("_address");
+  if (
+    typeof name !== "string" ||
+    typeof content !== "string" ||
+    typeof lat !== "string" ||
+    typeof lng !== "string" ||
+    typeof address !== "string"
+  ) {
     return badRequest({
       formError: `Form not submitted correctly.`,
     });
