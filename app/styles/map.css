@@ -1,0 +1,20 @@
+.leaflet-control-geocoder-form input {
+  color: black;
+}
+
+.leaflet-control-geocoder-form input::placeholder {
+  color: gray;
+}
+
+.leaflet-container {
+  border-radius: 4px;
+}
+
+input,
+textarea {
+  color: black !important;
+}
+
+main .container {
+  height: calc(100vh - 220px);
+}

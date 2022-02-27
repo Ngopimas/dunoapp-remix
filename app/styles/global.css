@@ -205,6 +205,14 @@ h6 {
   outline: none;
 }
 
+.logout {
+  background-color: var(--color-foreground);
+}
+
+.logout:hover {
+  background-color: var(--color-links);
+}
+
 /* forms */
 
 form {

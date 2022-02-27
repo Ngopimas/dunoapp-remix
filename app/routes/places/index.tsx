@@ -35,6 +35,7 @@ export default function PlacesIndexRoute() {
     <div>
       <p>Here's a random place to eat:</p>
       <Link to={data.randomPlace.id}>{data.randomPlace.name}</Link>
+      <p>{data.randomPlace.address}</p>
       <p>{data.randomPlace.content}</p>
     </div>
   );
