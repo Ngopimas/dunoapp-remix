@@ -43,6 +43,9 @@ export const action: ActionFunction = async ({ request }) => {
   const form = await request.formData();
   const name = form.get("name");
   const content = form.get("content");
+  const lat = "";
+  const lng = "";
+  const address = "";
   if (typeof name !== "string" || typeof content !== "string") {
     return badRequest({
       formError: `Form not submitted correctly.`,
@@ -54,7 +57,7 @@ export const action: ActionFunction = async ({ request }) => {
     content: validatePlaceContent(content),
   };
 
-  const fields = { name, content };
+  const fields = { name, content, lat, lng, address };
 
   if (Object.values(fieldErrors).some(Boolean)) {
     return badRequest({ fieldErrors, fields });
@@ -66,8 +69,6 @@ export const action: ActionFunction = async ({ request }) => {
 
 export default function NewPlaceRoute() {
   const actionData = useActionData<ActionData>();
-
-  // const contentError = validatePlaceContent(state.content);
 
   return (
     <div>

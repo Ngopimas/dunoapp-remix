@@ -27,4 +27,7 @@ model Place {
   updatedAt  DateTime @updatedAt
   name       String
   content    String
+  lat        String
+  lng        String
+  address    String
 }
