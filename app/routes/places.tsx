@@ -64,8 +64,8 @@ export default function placesRoute() {
             <div className="user-info">
               <span>{`Hi ${data.user.username}`}</span>
               <Form action="/logout" method="post">
-                <button type="submit" className="button">
-                  Logout
+                <button type="submit" className="button logout" title="Logout">
+                  🚪🚶
                 </button>
               </Form>
             </div>
@@ -77,7 +77,7 @@ export default function placesRoute() {
       <main className="restaurants-main">
         <div className="container">
           <div className="restaurants-list">
-            <Link to="." className="button">
+            <Link to="." className="button" title="Get a random place">
               🎲 Random
             </Link>
             <p>Here are a few more places to check out:</p>

@@ -1,30 +1,8 @@
-import { ActionFunction, LinksFunction, LoaderFunction, redirect } from "remix";
-import { useCatch, Link, json } from "remix";
-import { Suspense, lazy, useEffect, useState } from "react";
-import type { ReactNode } from "react";
+import type { ActionFunction, LoaderFunction } from "remix";
+import { useActionData, redirect, json, useCatch, Link, Form } from "remix";
 
 import { db } from "~/utils/db.server";
 import { requireUserId, getUserId } from "~/utils/session.server";
-import globalStylesUrl from "~/styles/map.css";
-// @ts-expect-error: Let's ignore this ts(1323) error about dynamic import support
-const Map = lazy(() => import("~/components/Map")); // compiles
-
-export const links: LinksFunction = () => {
-  return [
-    {
-      rel: "stylesheet",
-      href: "https://unpkg.com/leaflet@latest/dist/leaflet.css",
-    },
-    {
-      rel: "stylesheet",
-      href: "https://www.unpkg.com/leaflet-control-geocoder@2.2.0/dist/Control.Geocoder.css",
-    },
-    {
-      rel: "stylesheet",
-      href: globalStylesUrl,
-    },
-  ];
-};
 
 export const loader: LoaderFunction = async ({ request }) => {
   const userId = await getUserId(request);
@@ -34,16 +12,8 @@ export const loader: LoaderFunction = async ({ request }) => {
   return {};
 };
 
-export function ClientOnly({ children }: { children: ReactNode }) {
-  let [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-  return mounted ? <>{children}</> : null;
-}
-
 function validatePlaceContent(content: string) {
-  if (content.length < 5) {
+  if (content.length < 3) {
     return `That description is too short`;
   }
 }
@@ -54,7 +24,7 @@ function validatePlaceName(name: string) {
   }
 }
 
-export type ActionData = {
+type ActionData = {
   formError?: string;
   fieldErrors?: {
     name: string | undefined;
@@ -97,16 +67,63 @@ export const action: ActionFunction = async ({ request }) => {
   return redirect(`/places/${place.id}`);
 };
 
-export default function MapRoute() {
+export default function NewPlaceRoute() {
+  const actionData = useActionData<ActionData>();
+
   return (
-    <ClientOnly>
-      <p>
-        Search your hidden gem with its address and share it with the community.
-      </p>
-      <Suspense fallback={<p>You should see a map... soon?</p>}>
-        <Map />
-      </Suspense>
-    </ClientOnly>
+    <div>
+      <p>Which new gem would you like to share?</p>
+      <Form method="post">
+        <div>
+          <label>
+            Name:{" "}
+            <input
+              type="text"
+              defaultValue={actionData?.fields?.name}
+              name="name"
+              aria-invalid={Boolean(actionData?.fieldErrors?.name) || undefined}
+              aria-errormessage={
+                actionData?.fieldErrors?.name ? "name-error" : undefined
+              }
+            />
+            {actionData?.fieldErrors?.name ? (
+              <p className="form-validation-error" role="alert" id="name-error">
+                {actionData.fieldErrors.name}
+              </p>
+            ) : null}
+          </label>
+        </div>
+        <div>
+          <label>
+            Description:{" "}
+            <textarea
+              defaultValue={actionData?.fields?.content}
+              name="content"
+              aria-invalid={
+                Boolean(actionData?.fieldErrors?.content) || undefined
+              }
+              aria-errormessage={
+                actionData?.fieldErrors?.content ? "content-error" : undefined
+              }
+            />
+          </label>
+          {actionData?.fieldErrors?.content ? (
+            <p
+              className="form-validation-error"
+              role="alert"
+              id="content-error"
+            >
+              {actionData.fieldErrors.content}
+            </p>
+          ) : null}
+        </div>
+        <div>
+          <button type="submit" className="button large">
+            Add this place
+          </button>
+        </div>
+      </Form>
+    </div>
   );
 }
 
